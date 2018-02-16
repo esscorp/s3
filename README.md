@@ -9,9 +9,14 @@ Features:
 - **Download:** download file object.
 - **Exists:** checks if the file exists.
 - **Head:** get file head object.
+- **IsDownloadable:** checks if the file is downloadable. Downloadable files have their header ContentDisposition set to 'attachment'.
 - **UrlPrivate:** get private url with an expiration which can be used for img tags.
 - **UrlDownload:** get private url with an expiration which can be used for downloads.
 - **UrlUpload:** get private url with an expiration which can be used for uploads.
+
+
+> todo: Document the significance of setting the `ContentDisposition` to attachment.
+
 
 ## Install
 
@@ -22,48 +27,19 @@ npm install @esscorp/s3 --save
 ## Usage
 
 ```js
-var S3 = require('@esscorp/s3');
-var s3 = new S3({
-    expires: 60 * 60 // 1 hour
+var s3 = new require('@esscorp/s3')();
+var srcBucket = 'old-bucket';
+var srcKey = 'stupid/path';
+var dstBucket = 'corp-eng-app-feature';
+var dstKey = UUID();
+
+s3.copy(srcBucket, srcKey, dstBucket, dstKey, function(err){
+    if (err) return next(err);
+
+    s3.delete(srcBucket, srcKey, function(err){
+        if (err) return next(err);
+
+        next();
+    })
 });
-```
-
-## Copy
-```js
-```
-
-## ContentType
-```js
-```
-
-## Contents
-```js
-```
-
-## Delete
-```js
-```
-
-## Download
-```js
-```
-
-## Exists
-```js
-```
-
-## Head
-```js
-```
-
-## UrlPrivate
-```js
-```
-
-## UrlDownload
-```js
-```
-
-## UrlUpload
-```js
 ```

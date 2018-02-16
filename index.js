@@ -1,30 +1,31 @@
 'use strict';
 
-var Assert = require('assert');
 var Prove = require('provejs-params');
 var AWS = require('aws-sdk');
-var ok = Assert.ok;
 
 module.exports = function(cfg) {
 
-	// validate
-	ok(isFinite(cfg.expires), 'Config `expires` expected to be integer.');
-
-	// AWS client
 	var s3 = new AWS.S3(cfg.iam);
+	cfg.expires = cfg.expires || 60 * 60; // 1 hour
 
-	function download(s3Bucket, s3Path, next) {
+	function download(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
 		var params = {
 			Bucket: s3Bucket,
-			Key: s3Path
+			Key: s3Key
 		};
 		s3.getObject(params, next);
 	}
 
-	function head(s3Bucket, s3Path, next) {
+	function head(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
 		var params = {
 			Bucket: s3Bucket,
-			Key: s3Path
+			Key: s3Key
 		};
 
 		s3.headObject(params, function(err, head) {
@@ -36,10 +37,13 @@ module.exports = function(cfg) {
 		});
 	}
 
-	function del(s3Bucket, s3Path, next) {
+	function del(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
 		var params = {
 			Bucket: s3Bucket,
-			Key: s3Path
+			Key: s3Key
 		};
 
 		s3.deleteObject(params, function(err) {
@@ -51,22 +55,31 @@ module.exports = function(cfg) {
 		});
 	}
 
-	function exists(s3Bucket, s3Path, next) {
-		head(s3Bucket, s3Path, function(err, head) {
+	function exists(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
+		head(s3Bucket, s3Key, function(err, head) {
 			if (err) return next(err);
 			next(null, head);
 		});
 	}
 
-	function contentType(s3Bucket, s3Path, next) {
-		head(s3Bucket, s3Path, function(err, head) {
+	function contentType(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
+		head(s3Bucket, s3Key, function(err, head) {
 			if (err) return next(err);
 			next(null, head.ContentType);
 		});
 	}
 
-	function contents(s3Bucket, s3Path, next) {
-		download(s3Bucket, s3Path, function(err, data) {
+	function contents(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
+
+		download(s3Bucket, s3Key, function(err, data) {
 			if (err) return next(err);
 
 			next(null, data.Body.toString());
@@ -74,6 +87,8 @@ module.exports = function(cfg) {
 	}
 
 	function copy(srcBucket, srcKey, dstBucket, dstKey, next) {
+
+		Prove('SSSSF', arguments);
 
 		var params = {
 			CopySource: srcBucket + '/' + srcKey,
@@ -91,7 +106,9 @@ module.exports = function(cfg) {
 		});
 	}
 
-	function urlPrivate(s3Bucket, s3Path, next) {
+	function urlPrivate(s3Bucket, s3Key, next) {
+
+		Prove('SSF', arguments);
 
 		// todo:
 		// https://blogs.msdn.microsoft.com/ie/2008/07/02/ie8-security-part-v-comprehensive-protection/
@@ -102,13 +119,15 @@ module.exports = function(cfg) {
 			Bucket: s3Bucket,
 			Expires: cfg.expires,
 			//ResponseContentDisposition: 'attachment',
-			Key: s3Path
+			Key: s3Key
 		};
 		s3.getSignedUrl('getObject', params, next);
 		//return url;
 	}
 
-	function urlDownload(s3Bucket, s3Path, filename, next) {
+	function urlDownload(s3Bucket, s3Key, filename, next) {
+
+		Prove('SSSF', arguments);
 
 		//Content-Disposition: attachment; filename=foo.bar
 		var rcd = 'attachment; filename=' + filename;
@@ -117,28 +136,40 @@ module.exports = function(cfg) {
 			Bucket: s3Bucket,
 			Expires: cfg.expires,
 			ResponseContentDisposition: rcd,
-			Key: s3Path
+			Key: s3Key
 		};
 		s3.getSignedUrl('getObject', params, next);
 	}
 
-	function urlUpload(s3Bucket, s3Path, mime, next) {
+	function urlUpload(s3Bucket, s3Key, mime, next) {
 
-		Prove('SSF', arguments);
+		Prove('SSSF', arguments);
 
-		//console.log('urlUpload()'.red, s3Path, mime);
+		//console.log('urlUpload()'.red, s3Key, mime);
 
 		var params = {
 			Bucket: s3Bucket,
 			Expires: cfg.expires,
 			ContentType: mime,
-			Key: s3Path
+			Key: s3Key
 		};
 
 		// to force upload to fail
 		// delete params.ContentType;
 
 		s3.getSignedUrl('putObject', params, next);
+	}
+
+	function isDownloadable(bucket, s3Key, next) {
+
+		head(bucket, s3Key, function(err, head) {
+			if (err) return next(err);
+
+			var exists = !!head;
+			var attachment = (head && head.ContentDisposition === 'attachment');
+
+			next(null, exists, attachment);
+		});
 	}
 
 	// public functions
@@ -153,6 +184,7 @@ module.exports = function(cfg) {
 		contentType: contentType,
 		contents: contents,
 		copy: copy,
+		isDownloadable: isDownloadable,
 		options: cfg
 	};
 };
