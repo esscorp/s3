@@ -172,8 +172,16 @@ module.exports = function(cfg) {
 		});
 	}
 
+	function credentials(next) {
+		s3.config.getCredentials(function(err) {
+			if (err) return next(err);
+			next(null, s3.config.credentials);
+		});
+	}
+
 	// public functions
 	return {
+		credentials: credentials,
 		urlUpload: urlUpload,
 		urlPrivate: urlPrivate,
 		urlDownload: urlDownload,

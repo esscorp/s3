@@ -5,6 +5,7 @@ Features:
 - **Copy:** copy file object from source to destination.
 - **ContentType:** get the contentType of file.
 - **Contents:** get file contents as string.
+- **Credentials:** get AWS credentials.
 - **Delete:** delete file.
 - **Download:** download file object.
 - **Exists:** checks if the file exists.
