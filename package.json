@@ -1,0 +1,34 @@
+{
+  "name": "@esscorp/s3",
+  "version": "1.0.0",
+  "description": "s3 wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esscorp/s3.git"
+  },
+  "keywords": [
+    "s3",
+    "upload",
+    "download"
+  ],
+  "author": "dan@hollenbecks.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/esscorp/s3/issues"
+  },
+  "homepage": "https://github.com/esscorp/s3#readme",
+  "dependencies": {
+    "aws-sdk": "^2.196.0",
+    "provejs-params": "^1.0.1"
+  },
+  "devDependencies": {
+    "@esscorp/eslint": "^2.2.1",
+    "eslint": "^4.9.0",
+    "grunt": "^1.0.1",
+    "grunt-eslint": "^20.1.0"
+  }
+}
