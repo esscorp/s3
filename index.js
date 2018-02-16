@@ -7,11 +7,10 @@ module.exports = function(cfg) {
 
 	// defaults
 	cfg = cfg || {};
-	cfg.iam = cfg.iam || {
-		region: 'us-east-1',
-		apiVersion: '2006-03-01'
-	};
+	cfg.iam = cfg.iam || {};
 	cfg.expires = cfg.expires || 60 * 60; // 1 hour
+	cfg.iam.region = cfg.iam.region || 'us-east-1';
+	cfg.iam.apiVersion = cfg.iam.apiVersion || '2006-03-01';
 
 	var s3 = new AWS.S3(cfg.iam);
 
