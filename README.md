@@ -27,7 +27,8 @@ npm install @esscorp/s3 --save
 ## Usage
 
 ```js
-var s3 = new require('@esscorp/s3')();
+var S3 = require('@esscorp/s3');
+var s3 = new S3();
 ```
 
 ## Copy
@@ -41,7 +42,6 @@ Copy S3 object from one bucket to another bucket.
 - callback (Function) - Required callback.
 
 ```js
-var s3 = new require('@esscorp/s3')();
 var srcBucket = 'old-bucket';
 var srcKey = 'stupid/path';
 var dstBucket = 'corp-eng-app-feature';
