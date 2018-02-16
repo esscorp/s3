@@ -5,8 +5,15 @@ var AWS = require('aws-sdk');
 
 module.exports = function(cfg) {
 
-	var s3 = new AWS.S3(cfg.iam);
+	// defaults
+	cfg = cfg || {};
+	cfg.iam = cfg.iam || {
+		region: 'us-east-1',
+		apiVersion: '2006-03-01'
+	};
 	cfg.expires = cfg.expires || 60 * 60; // 1 hour
+
+	var s3 = new AWS.S3(cfg.iam);
 
 	function download(s3Bucket, s3Key, next) {
 
