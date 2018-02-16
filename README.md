@@ -38,6 +38,7 @@ Copy S3 object from one bucket to another bucket.
 - srcKey (String) - Required source key name.
 - dstBucket (String) - Required destination bucket name.
 - srcKey (String) - Required destination key name.
+- callback (Function) - Required callback.
 
 ```js
 var s3 = new require('@esscorp/s3')();
