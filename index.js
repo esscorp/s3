@@ -35,8 +35,6 @@ module.exports = function(cfg) {
 			Key: s3Key
 		};
 
-		s3.upload(params, next)
-
 		var fileStream = fs.createReadStream(file);
 		fileStream.on('error', function(err) {
 			next(err);
