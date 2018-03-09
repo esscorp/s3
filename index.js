@@ -2,6 +2,7 @@
 
 var Prove = require('provejs-params');
 var AWS = require('aws-sdk');
+var fs = require('fs');
 
 module.exports = function(cfg) {
 
@@ -24,6 +25,33 @@ module.exports = function(cfg) {
 		};
 		s3.getObject(params, next);
 	}
+
+	function upload(s3Bucket, s3Key, file, next) {
+
+		Prove('SSOF', arguments);
+
+		var params = {
+			Bucket: s3Bucket,
+			Key: s3Key
+		};
+
+		s3.upload(params, next)
+
+		var fileStream = fs.createReadStream(file);
+		fileStream.on('error', function(err) {
+			next(err);
+		});
+		params.Body = fileStream;
+
+		// call S3 to retrieve upload file to specified bucket
+		s3.upload (params, function (err, data) {
+		  if (err) {
+		    console.log("Error", err);
+		  } if (data) {
+		    console.log("Upload Success", data.Location);
+		  }
+		});
+	};
 
 	function head(s3Bucket, s3Key, next) {
 
@@ -188,6 +216,7 @@ module.exports = function(cfg) {
 	// public functions
 	return {
 		credentials: credentials,
+		upload: upload,
 		urlUpload: urlUpload,
 		urlPrivate: urlPrivate,
 		urlDownload: urlDownload,
