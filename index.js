@@ -27,29 +27,27 @@ module.exports = function(cfg) {
 	}
 
 	function upload(s3Bucket, s3Key, file, next) {
-
-		Prove('SSOF', arguments);
-
-		var params = {
-			Bucket: s3Bucket,
-			Key: s3Key
-		};
+		// file is the path to image relative
+		// Prove('SSSF', arguments);
 
 		var fileStream = fs.createReadStream(file);
 		fileStream.on('error', function(err) {
 			next(err);
 		});
-		params.Body = fileStream;
+
+		var params = {
+			Bucket: s3Bucket,
+			Key: s3Key,
+			Body: fileStream
+		};
 
 		// call S3 to retrieve upload file to specified bucket
-		s3.upload (params, function (err, data) {
-		  if (err) {
-		    console.log("Error", err);
-		  } if (data) {
-		    console.log("Upload Success", data.Location);
-		  }
+		s3.upload(params, function(err, data) {
+		  if (err) next(err);
+
+		  next(null, data);
 		});
-	};
+	}
 
 	function head(s3Bucket, s3Key, next) {
 
