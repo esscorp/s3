@@ -196,6 +196,26 @@ s3.exists(s3Bucket, s3Key, function(err, head) {
 });
 ```
 
+## Upload
+
+Uploads a file.
+
+- s3Bucket (String) - Required source bucket name.
+- s3Key (String) - Required source key name.
+- file (String) - Required filename. Sets the content-disposition header.
+- callback (Function) - Required callback.
+
+```js
+var s3Bucket = 'bucket';
+var s3Key = 'path';
+var file = 'file path relative wrapper';
+
+s3.upload(s3Bucket, s3Key, file, function(err, data) {
+    if (err) return next(err);
+    next(null, data);
+});
+```
+
 ## UrlPrivate
 
 Get private url with an expiration which can be used for img tags.
