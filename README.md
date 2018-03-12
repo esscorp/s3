@@ -203,15 +203,15 @@ Uploads a file.
 
 - s3Bucket (String) - Required source bucket name.
 - s3Key (String) - Required source key name.
-- file (String) - Required filename. Sets the content-disposition header.
+- stream (Stream) - Required stream object of file.
 - callback (Function) - Required callback.
 
 ```js
 var s3Bucket = 'bucket';
 var s3Key = 'path';
-var file = 'file path relative wrapper';
+var stream = GM('path').stream(); // GM is for node module gm
 
-s3.upload(s3Bucket, s3Key, file, function(err, data) {
+s3.upload(s3Bucket, s3Key, stream, function(err, data) {
     if (err) return next(err);
     next(null, data);
 });

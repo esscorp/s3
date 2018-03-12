@@ -1,5 +1,7 @@
 'use strict';
-
+// to run test install gm node module
+// npm install --save gm
+// var GM = require('gm');
 var wrapper = require('../index.js');
 var s3 = new wrapper({
 	region: 'us-east-1',
@@ -17,7 +19,8 @@ var s3 = new wrapper({
 var s3Bucket = 'ess-eng-dox-downloads';
 var s3Key = 'thumbsUp.jpg';
 var file = './tests/thumbsUp.jpg';
-
-s3.upload(s3Bucket, s3Key, file, function(err, data) {
- console.log('Doesn\'t need to do anything');
-});
+// var stream = GM(file).stream();
+//
+// s3.upload(s3Bucket, s3Key, stream, function(err, data) {
+//
+// });

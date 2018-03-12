@@ -2,7 +2,6 @@
 
 var Prove = require('provejs-params');
 var AWS = require('aws-sdk');
-var fs = require('fs');
 
 module.exports = function(cfg) {
 
@@ -26,22 +25,16 @@ module.exports = function(cfg) {
 		s3.getObject(params, next);
 	}
 
-	function upload(s3Bucket, s3Key, file, next) {
-		// file is the path to image relative
-		// Prove('SSSF', arguments);
+	function upload(s3Bucket, s3Key, stream, next) {
 
-		var fileStream = fs.createReadStream(file);
-		fileStream.on('error', function(err) {
-			next(err);
-		});
+		Prove('SSOF', arguments);
 
 		var params = {
 			Bucket: s3Bucket,
 			Key: s3Key,
-			Body: fileStream
+			Body: stream
 		};
 
-		// call S3 to retrieve upload file to specified bucket
 		s3.upload(params, function(err, data) {
 		  if (err) next(err);
 
