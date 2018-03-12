@@ -11,6 +11,7 @@ Features:
 - **Exists:** checks if the file exists.
 - **Head:** get file head object.
 - **IsDownloadable:** checks if the file is downloadable. Downloadable files exist and have their header ContentDisposition set to 'attachment'.
+- **Upload:** uploads file object.
 - **UrlPrivate:** get private url with an expiration which can be used for img tags.
 - **UrlDownload:** get private url with an expiration which can be used for downloads.
 - **UrlUpload:** get private url with an expiration which can be used for uploads.
