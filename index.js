@@ -109,6 +109,8 @@ module.exports = function(cfg) {
 		download(s3Bucket, s3Key, function(err, data) {
 			if (err) return next(err);
 
+			if (!data) return next();
+
 			next(null, data.Body.toString());
 		});
 	}
