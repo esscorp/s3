@@ -22,11 +22,7 @@ module.exports = function(cfg) {
 			Bucket: s3Bucket,
 			Key: s3Key
 		};
-		s3.getObject(params, function (err, data) {
-			if (err) return next(err);
-
-			return next(null, data.body);
-		});
+		s3.getObject(params, next);
 	}
 
 	function upload(s3Bucket, s3Key, stream, next) {
