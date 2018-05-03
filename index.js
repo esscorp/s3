@@ -36,9 +36,9 @@ module.exports = function(cfg) {
 		};
 
 		s3.upload(params, function(err, data) {
-		  if (err) next(err);
+			if (err) next(err);
 
-		  next(null, data);
+			next(null, data);
 		});
 	}
 
